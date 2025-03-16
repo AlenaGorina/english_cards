@@ -21,6 +21,8 @@ const WordList: React.FC = () => {
     },
   ]);
 
+  const [learnedWordsCount, setLearnedWordsCount] = useState(0); // Состояние для подсчета изученных слов
+
   const addWord = (newWord: {
     word: string;
     transcription: string;
@@ -34,12 +36,23 @@ const WordList: React.FC = () => {
     setWords(words.filter((word) => word.word !== wordToDelete));
   };
 
+  // Функция для увеличения счетчика изученных слов
+  const handleShowTranslation = () => {
+    setLearnedWordsCount((prev) => prev + 1);
+  };
+
   return (
     <div className={style.wordList}>
+      <h2>Learned Words: {learnedWordsCount}</h2>{" "}
+      {/* Отображаем количество изученных слов */}
       <AddWordForm addWord={addWord} />
       <WordTable words={words} deleteWord={deleteWord} />
       {words.map((word, index) => (
-        <WordCard key={index} {...word} />
+        <WordCard
+          key={index}
+          {...word}
+          onShowTranslation={handleShowTranslation} // Передаем функцию в WordCard
+        />
       ))}
     </div>
   );

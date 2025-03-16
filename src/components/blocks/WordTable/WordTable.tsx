@@ -9,9 +9,19 @@ interface WordTableProps {
     theme: string;
   }>;
   deleteWord: (wordToDelete: string) => void;
+  updateWord: (word: {
+    word: string;
+    transcription: string;
+    translation: string;
+    theme: string;
+  }) => void;
 }
 
-const WordTable: React.FC<WordTableProps> = ({ words, deleteWord }) => {
+const WordTable: React.FC<WordTableProps> = ({
+  words,
+  deleteWord,
+  updateWord,
+}) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [editingWord, setEditingWord] = useState<{
     word: string;
@@ -26,8 +36,25 @@ const WordTable: React.FC<WordTableProps> = ({ words, deleteWord }) => {
   };
 
   const handleSave = () => {
+    if (editingWord) {
+      updateWord(editingWord);
+    }
     setIsEditing(false);
     setEditingWord(null);
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+    setEditingWord(null);
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    field: string
+  ) => {
+    setEditingWord((prev) =>
+      prev ? { ...prev, [field]: e.target.value } : prev
+    );
   };
 
   return (
@@ -46,28 +73,40 @@ const WordTable: React.FC<WordTableProps> = ({ words, deleteWord }) => {
           <tr key={index}>
             <td>
               {isEditing && editingWord?.word === word.word ? (
-                <input value={editingWord.word} />
+                <input
+                  value={editingWord.word}
+                  onChange={(e) => handleChange(e, "word")}
+                />
               ) : (
                 word.word
               )}
             </td>
             <td>
               {isEditing && editingWord?.word === word.word ? (
-                <input value={editingWord.transcription} />
+                <input
+                  value={editingWord.transcription}
+                  onChange={(e) => handleChange(e, "transcription")}
+                />
               ) : (
                 word.transcription
               )}
             </td>
             <td>
               {isEditing && editingWord?.word === word.word ? (
-                <input value={editingWord.translation} />
+                <input
+                  value={editingWord.translation}
+                  onChange={(e) => handleChange(e, "translation")}
+                />
               ) : (
                 word.translation
               )}
             </td>
             <td>
               {isEditing && editingWord?.word === word.word ? (
-                <input value={editingWord.theme} />
+                <input
+                  value={editingWord.theme}
+                  onChange={(e) => handleChange(e, "theme")}
+                />
               ) : (
                 word.theme
               )}
@@ -76,7 +115,7 @@ const WordTable: React.FC<WordTableProps> = ({ words, deleteWord }) => {
               {isEditing && editingWord?.word === word.word ? (
                 <>
                   <button onClick={handleSave}>Save</button>
-                  <button onClick={() => setIsEditing(false)}>Cancel</button>
+                  <button onClick={handleCancel}>Cancel</button>
                 </>
               ) : (
                 <>

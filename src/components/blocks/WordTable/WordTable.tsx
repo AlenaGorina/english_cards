@@ -1,34 +1,11 @@
 import React, { useState } from "react";
+import { useWords } from "../../context/WordsContext";
 import styles from "./WordTable.module.scss";
 
-interface WordTableProps {
-  words: Array<{
-    word: string;
-    transcription: string;
-    translation: string;
-    theme: string;
-  }>;
-  deleteWord: (wordToDelete: string) => void;
-  updateWord: (word: {
-    word: string;
-    transcription: string;
-    translation: string;
-    theme: string;
-  }) => void;
-}
-
-const WordTable: React.FC<WordTableProps> = ({
-  words,
-  deleteWord,
-  updateWord,
-}) => {
+const WordTable: React.FC = () => {
+  const { words, deleteWord, updateWord } = useWords();
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [editingWord, setEditingWord] = useState<{
-    word: string;
-    transcription: string;
-    translation: string;
-    theme: string;
-  } | null>(null);
+  const [editingWord, setEditingWord] = useState<any>(null);
 
   const handleEdit = (word: any) => {
     setIsEditing(true);
